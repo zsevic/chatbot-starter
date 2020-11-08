@@ -1,0 +1,8 @@
+{
+  "collection": "@nestjs/schematics",
+  "entryFile": "src/main",
+  "compilerOptions": {
+    "assets": ["locales/**/*"],
+    "plugins": ["@nestjs/swagger/plugin"]
+  }
+}
