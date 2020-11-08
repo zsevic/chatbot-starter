@@ -6,7 +6,7 @@
 
 ### Prerequisites
 
-- Node version 14
+- Node.js installed (version 14)
 - Local PostgreSQL database
 
 ### Setup
