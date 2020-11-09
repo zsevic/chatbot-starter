@@ -55,8 +55,18 @@ export class ResponseService {
     ];
   };
 
-  getRegisterUserSuccessResponse = (locale: string): string =>
-    this.i18nService.__({ phrase: USER_REGISTRATION_SUCCESS, locale });
+  getRegisterUserSuccessResponse = (locale: string) => {
+    const text = this.i18nService.__({
+      phrase: USER_REGISTRATION_SUCCESS,
+      locale,
+    });
+    const quickReplies = this.getDefaultResponseQuickReplies(locale);
+
+    return {
+      text,
+      quickReplies,
+    };
+  };
 
   getRegisterUserFailureResponse = (locale: string) => {
     const { user: userI18n } = this.i18nService.getCatalog(locale);
