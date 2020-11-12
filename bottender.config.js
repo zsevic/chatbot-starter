@@ -33,37 +33,5 @@ module.exports = {
         persistentMenu: PERSISTENT_MENU,
       },
     },
-    whatsapp: {
-      enabled: false,
-      path: '/webhooks/whatsapp',
-      accountSid: process.env.WHATSAPP_ACCOUNT_SID,
-      authToken: process.env.WHATSAPP_AUTH_TOKEN,
-      phoneNumber: process.env.WHATSAPP_PHONE_NUMBER,
-    },
-    line: {
-      enabled: false,
-      path: '/webhooks/line',
-      accessToken: process.env.LINE_ACCESS_TOKEN,
-      channelSecret: process.env.LINE_CHANNEL_SECRET,
-    },
-    telegram: {
-      enabled: false,
-      path: '/webhooks/telegram',
-      accessToken: process.env.TELEGRAM_ACCESS_TOKEN,
-    },
-    slack: {
-      enabled: false,
-      path: '/webhooks/slack',
-      accessToken: process.env.SLACK_ACCESS_TOKEN,
-      signingSecret: process.env.SLACK_SIGNING_SECRET,
-    },
-    viber: {
-      enabled: false,
-      path: '/webhooks/viber',
-      accessToken: process.env.VIBER_ACCESS_TOKEN,
-      sender: {
-        name: 'xxxx',
-      },
-    },
   },
 };

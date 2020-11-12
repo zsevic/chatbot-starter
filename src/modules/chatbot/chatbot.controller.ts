@@ -8,6 +8,12 @@ import {
   ABOUT_ME_PAYLOAD,
   GET_STARTED_PAYLOAD,
 } from 'modules/chatbot/chatbot.constants';
+import {
+  isButtonTemplate,
+  isGenericTemplate,
+  isQuickReplyTemplate,
+} from './chatbot.type-guards';
+import { Message } from './chatbot.types';
 import { LocationService } from './services/location.service';
 import { MessageService } from './services/message.service';
 import { PostbackService } from './services/postback.service';
@@ -98,7 +104,7 @@ export class ChatbotController {
     return this.say(context, response);
   };
 
-  say = (context: MessengerContext, message) => {
+  say = (context: MessengerContext, message: Message | Message[]) => {
     const {
       _session: {
         user: { id: recipientId },
@@ -106,23 +112,21 @@ export class ChatbotController {
     } = context;
     if (typeof message === 'string') {
       return context.client.sendText(recipientId, message);
-    } else if (message && message.text) {
-      if (message.quickReplies && message.quickReplies.length > 0) {
-        return context.client.sendText(recipientId, message.text, {
-          quickReplies: message.quickReplies,
-        });
-      } else if (message.buttons && message.buttons.length > 0) {
-        return context.client.sendTemplate(recipientId, {
-          templateType: 'button',
-          ...message,
-        });
-      }
-    } else if (message && message.cards) {
+    } else if (isQuickReplyTemplate(message)) {
+      return context.client.sendText(recipientId, message.text, {
+        quickReplies: message.quickReplies,
+      });
+    } else if (isButtonTemplate(message)) {
+      return context.client.sendTemplate(recipientId, {
+        templateType: 'button',
+        ...message,
+      });
+    } else if (isGenericTemplate(message)) {
       return context.client.sendGenericTemplate(recipientId, message.cards);
     } else if (Array.isArray(message)) {
       return message.reduce((promise, msg) => {
         return promise.then(() => this.say(context, msg));
-      }, Promise.resolve());
+      }, Promise.resolve(undefined));
     }
     this.logger.error('Invalid format for .say() message.');
   };
