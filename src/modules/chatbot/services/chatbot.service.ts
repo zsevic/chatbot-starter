@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { MessengerContext } from 'bottender';
 import { messenger, platform, router } from 'bottender/router';
 import { DEFAULT_MESSENGER_LOCALE } from 'common/config/constants';
 import { GET_STARTED_PAYLOAD } from 'modules/chatbot/chatbot.constants';
@@ -14,13 +15,13 @@ export class ChatbotService {
     private readonly userService: UserService,
   ) {}
 
-  private asyncWrap = (fn) => async (context) => {
+  private asyncWrap = (fn) => async (context: MessengerContext) => {
     const user = await this.userService.validateUser(context._session.user.id);
 
     if (!user && context.event.postback?.payload !== GET_STARTED_PAYLOAD) {
       const {
         locale = DEFAULT_MESSENGER_LOCALE,
-      } = await context.getUserProfile();
+      } = await context.getUserProfile({ fields: ['locale'] });
 
       const response = await this.responseService.getRegisterUserFailureResponse(
         locale,

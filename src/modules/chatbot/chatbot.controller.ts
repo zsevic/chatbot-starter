@@ -1,4 +1,5 @@
 import { Controller, Logger } from '@nestjs/common';
+import { MessengerContext } from 'bottender';
 import {
   DEFAULT_MESSENGER_GENDER,
   DEFAULT_MESSENGER_LOCALE,
@@ -23,7 +24,7 @@ export class ChatbotController {
     private readonly resolverService: ResolverService,
   ) {}
 
-  private aboutMeHandler = async (context) => {
+  private aboutMeHandler = async (context: MessengerContext) => {
     const response = await this.resolverService.getAboutMeResponse(
       context._session.user.id,
     );
@@ -31,7 +32,7 @@ export class ChatbotController {
     return this.say(context, response);
   };
 
-  private getStartedButtonHandler = async (context) => {
+  private getStartedButtonHandler = async (context: MessengerContext) => {
     const {
       id,
       firstName,
@@ -39,16 +40,18 @@ export class ChatbotController {
       lastName,
       locale = DEFAULT_MESSENGER_LOCALE,
       profilePic: image_url,
-    } = await context.getUserProfile(context._session.user.id, [
-      'id',
-      'first_name',
-      'gender',
-      'last_name',
-      'locale',
-      'profile_pic',
-    ]);
+    } = await context.getUserProfile({
+      fields: [
+        'id',
+        'first_name',
+        'gender',
+        'last_name',
+        'locale',
+        'profile_pic',
+      ],
+    });
     const response = await this.resolverService.registerUser({
-      id,
+      id: +id,
       first_name: firstName,
       gender,
       image_url,
@@ -59,7 +62,7 @@ export class ChatbotController {
     return this.say(context, response);
   };
 
-  locationHandler = async (context) => {
+  locationHandler = async (context: MessengerContext) => {
     const {
       event: { location },
       _session: {
@@ -76,7 +79,7 @@ export class ChatbotController {
     return this.say(context, response);
   };
 
-  messageHandler = async (context) => {
+  messageHandler = async (context: MessengerContext) => {
     const {
       event,
       _session: {
@@ -96,7 +99,7 @@ export class ChatbotController {
     return this.say(context, response);
   };
 
-  postbackHandler = async (context) => {
+  postbackHandler = async (context: MessengerContext) => {
     const {
       event: {
         postback: { payload: buttonPayload },
@@ -118,7 +121,7 @@ export class ChatbotController {
     return this.say(context, response);
   };
 
-  say = (context, message) => {
+  say = (context: MessengerContext, message) => {
     const {
       _session: {
         user: { id: recipientId },

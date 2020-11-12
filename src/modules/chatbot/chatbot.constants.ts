@@ -1,3 +1,4 @@
+import { MessengerTypes } from 'bottender';
 import { name as projectName } from 'root/package.json';
 import { chatbot as chatbotI18nEn } from 'locales/en.json';
 import { chatbot as chatbotI18nSr } from 'locales/sr.json';
@@ -26,7 +27,7 @@ export const EN_US_LOCALE = 'en_US';
 export const SR_RS_LOCALE = 'sr_RS';
 const EN_GREETING_TEXT = `Hi! This is ${projectName}`;
 const SR_GREETING_TEXT = `Zdravo! Ovo je ${projectName}`;
-export const GREETING_TEXT = [
+export const GREETING_TEXT: MessengerTypes.GreetingConfig[] = [
   {
     locale: EN_GB_LOCALE,
     text: EN_GREETING_TEXT,
@@ -61,7 +62,7 @@ const SR_PERSISTENT_MENU = [
   },
 ];
 
-export const PERSISTENT_MENU = [
+export const PERSISTENT_MENU: MessengerTypes.PersistentMenu = [
   {
     locale: EN_GB_LOCALE,
     callToActions: EN_PERSISTENT_MENU,

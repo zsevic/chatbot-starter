@@ -1,3 +1,4 @@
+import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'modules/app/app.module';
 import { ChatbotModule } from 'modules/chatbot/chatbot.module';
@@ -6,7 +7,7 @@ import { ChatbotService } from 'modules/chatbot/services';
 const appContext = (function () {
   let _instance;
   return {
-    get: async () => {
+    get: async (): Promise<INestApplicationContext> => {
       if (!_instance) {
         _instance = await NestFactory.createApplicationContext(AppModule);
       }

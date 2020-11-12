@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { MessengerTypes } from 'bottender';
 import { Location } from 'modules/chatbot/chatbot.types';
 import { StateService } from 'modules/state/state.service';
 import { UserService } from 'modules/user/user.service';
@@ -12,7 +13,10 @@ export class LocationService {
     private readonly userService: UserService,
   ) {}
 
-  handleLocation = async (_: Location, userId: number) => {
+  handleLocation = async (
+    _: Location,
+    userId: number,
+  ): Promise<MessengerTypes.TextMessage> => {
     const locale = await this.userService.getLocale(userId);
     const state = await this.resolverService.getCurrentState(userId);
 

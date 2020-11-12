@@ -1,5 +1,6 @@
 import { parse } from 'querystring';
 import { Injectable } from '@nestjs/common';
+import { MessengerTypes } from 'bottender';
 import { POSTBACK_TYPE } from 'modules/chatbot/chatbot.constants';
 import { UserService } from 'modules/user/user.service';
 import { ResolverService } from './resolver.service';
@@ -11,7 +12,10 @@ export class PostbackService {
     private readonly userService: UserService,
   ) {}
 
-  handlePostback = async (buttonPayload: string, userId: number) => {
+  handlePostback = async (
+    buttonPayload: string,
+    userId: number,
+  ): Promise<MessengerTypes.TextMessage> => {
     const { locale } = await this.userService.getUser(userId);
 
     const { type } = parse(buttonPayload);

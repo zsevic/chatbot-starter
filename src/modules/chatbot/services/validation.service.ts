@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { MessengerTypes } from 'bottender';
 import { State } from 'modules/state/state.dto';
 import { ResponseService } from './response.service';
 
@@ -6,7 +7,11 @@ import { ResponseService } from './response.service';
 export class ValidationService {
   constructor(private readonly responseService: ResponseService) {}
 
-  validateMessage = async (_: any, state: State, locale: string) => {
+  validateMessage = (
+    _: any,
+    state: State,
+    locale: string,
+  ): MessengerTypes.TextMessage => {
     if (!state || !state.current_state) {
       return this.responseService.getDefaultResponse(locale);
     }

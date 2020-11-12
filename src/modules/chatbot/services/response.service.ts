@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { MessengerTypes } from 'bottender';
 import {
   ABOUT_ME_PAYLOAD,
   CHATBOT_ABOUT_ME_BUTTON,
@@ -9,6 +10,7 @@ import {
   REGISTRATION_FAILURE,
   USER_REGISTRATION_SUCCESS,
 } from 'modules/chatbot/chatbot.constants';
+import { ButtonTemplate } from 'modules/chatbot/chatbot.types';
 import { I18N_OPTIONS_FACTORY } from 'modules/external/i18n';
 import { name as projectName } from 'root/package.json';
 
@@ -27,7 +29,7 @@ export class ResponseService {
       },
     );
 
-  getDefaultResponse = (locale: string) => {
+  getDefaultResponse = (locale: string): MessengerTypes.TextMessage => {
     const text = this.i18nService.__({
       phrase: CHATBOT_DEFAULT_MESSAGE,
       locale,
@@ -40,7 +42,9 @@ export class ResponseService {
     };
   };
 
-  getDefaultResponseQuickReplies = (locale: string) => {
+  getDefaultResponseQuickReplies = (
+    locale: string,
+  ): MessengerTypes.QuickReply[] => {
     const title = this.i18nService.__({
       phrase: CHATBOT_ABOUT_ME_BUTTON,
       locale,
@@ -50,12 +54,14 @@ export class ResponseService {
       {
         title,
         payload: ABOUT_ME_PAYLOAD,
-        content_type: 'text',
+        contentType: 'text',
       },
     ];
   };
 
-  getRegisterUserSuccessResponse = (locale: string) => {
+  getRegisterUserSuccessResponse = (
+    locale: string,
+  ): MessengerTypes.TextMessage => {
     const text = this.i18nService.__({
       phrase: USER_REGISTRATION_SUCCESS,
       locale,
@@ -68,7 +74,7 @@ export class ResponseService {
     };
   };
 
-  getRegisterUserFailureResponse = (locale: string) => {
+  getRegisterUserFailureResponse = (locale: string): ButtonTemplate => {
     const { user: userI18n } = this.i18nService.getCatalog(locale);
 
     return {
