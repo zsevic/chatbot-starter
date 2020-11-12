@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { StateModule } from 'modules/state/state.module';
 import { UserModule } from 'modules/user/user.module';
 import { ChatbotController } from './chatbot.controller';
 import {
@@ -13,7 +12,7 @@ import {
 } from './services';
 
 @Module({
-  imports: [StateModule, UserModule],
+  imports: [UserModule],
   controllers: [ChatbotController],
   providers: [
     ChatbotController,

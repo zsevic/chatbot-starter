@@ -6,7 +6,6 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { StateEntity } from 'modules/state/state.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -35,7 +34,4 @@ export class UserEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
-
-  @OneToOne(() => StateEntity, (stateEntity) => stateEntity.user)
-  state: StateEntity;
 }

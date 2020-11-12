@@ -1,15 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Transactional } from 'typeorm-transactional-cls-hooked';
-import { StateRepository } from 'modules/state/state.repository';
 import { User } from './user.dto';
 import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly stateRepository: StateRepository,
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   getLocale = async (userId: number): Promise<string> => {
     const user = await this.userRepository.findOne(userId, {
@@ -23,11 +18,8 @@ export class UserService {
   getUser = async (id: number): Promise<User> =>
     this.userRepository.getUser(id);
 
-  @Transactional()
-  async registerUser(user: User): Promise<void> {
-    await this.userRepository.registerUser(user);
-    await this.stateRepository.initializeState(user.id);
-  }
+  registerUser = async (user: User): Promise<User> =>
+    this.userRepository.registerUser(user);
 
   validateUser = async (id: number): Promise<User> =>
     this.userRepository.validateUser(id);

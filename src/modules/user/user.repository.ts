@@ -4,19 +4,19 @@ import { UserEntity } from './user.entity';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
-  async getUser(id: number): Promise<UserEntity> {
+  async getUser(id: number): Promise<User> {
     const user = await this.findOne(id);
     if (!user) throw new Error("User doesn't exist");
 
     return user;
   }
 
-  async registerUser(userDto: User): Promise<UserEntity> {
+  registerUser = async (userDto: User): Promise<User> => {
     const user = await this.findOne(userDto.id);
     if (!user) return this.save(userDto);
 
     return user;
-  }
+  };
 
   async validateUser(id: number): Promise<User> {
     const user = await this.findOne(id);

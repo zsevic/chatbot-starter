@@ -1,8 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MessengerTypes } from 'bottender';
 import { ButtonTemplate } from 'modules/chatbot/chatbot.types';
-import { State } from 'modules/state/state.dto';
-import { StateService } from 'modules/state/state.service';
 import { User } from 'modules/user/user.dto';
 import { UserService } from 'modules/user/user.service';
 import { ResponseService } from './response.service';
@@ -13,7 +11,6 @@ export class ResolverService {
 
   constructor(
     private readonly responseService: ResponseService,
-    private readonly stateService: StateService,
     private readonly userService: UserService,
   ) {}
 
@@ -21,9 +18,6 @@ export class ResolverService {
     const { locale } = await this.userService.getUser(userId);
     return this.responseService.getAboutMeResponse(locale);
   };
-
-  getCurrentState = async (userId: number): Promise<State> =>
-    this.stateService.getCurrentState(userId);
 
   getDefaultResponse = (locale: string): MessengerTypes.TextMessage =>
     this.responseService.getDefaultResponse(locale);
@@ -43,7 +37,4 @@ export class ResolverService {
       );
     }
   };
-
-  resetState = async (userId: number): Promise<State> =>
-    this.stateService.resetState(userId);
 }

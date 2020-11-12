@@ -64,16 +64,12 @@ export class ChatbotController {
 
   locationHandler = async (context: MessengerContext) => {
     const {
-      event: { location },
       _session: {
         user: { id: userId },
       },
     } = context;
 
-    const response = await this.locationService.handleLocation(
-      location,
-      userId,
-    );
+    const response = await this.locationService.handleLocation(context, userId);
     if (!response) return;
 
     return this.say(context, response);
@@ -93,7 +89,7 @@ export class ChatbotController {
     if (this.quickReplyHandlers[event.quickReply?.payload])
       return this.quickReplyHandlers[event.quickReply?.payload](context);
 
-    const response = await this.messageService.handleMessage(event, userId);
+    const response = await this.messageService.handleMessage(context, userId);
     if (!response) return;
 
     return this.say(context, response);
@@ -112,10 +108,7 @@ export class ChatbotController {
     if (this.postbackHandlers[buttonPayload])
       return this.postbackHandlers[buttonPayload](context);
 
-    const response = await this.postbackService.handlePostback(
-      buttonPayload,
-      userId,
-    );
+    const response = await this.postbackService.handlePostback(context, userId);
     if (!response) return;
 
     return this.say(context, response);
