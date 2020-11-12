@@ -18,21 +18,16 @@ import {
   initializeTransactionalContext,
   patchTypeORMRepositoryWithBaseRepository,
 } from 'typeorm-transactional-cls-hooked';
-import config from 'common/config';
 import { I18N_FALLBACKS } from 'common/config/constants';
 import databaseConfig from 'common/config/database';
 import { RATE_LIMIT_REQUESTS, RATE_LIMIT_TIME } from 'common/config/rate-limit';
 import { isEnv } from 'common/utils';
-import { BootbotModule, BootbotOptions } from 'modules/external/bootbot';
+import { ChatbotModule } from 'modules/chatbot/chatbot.module';
 import { I18nModule } from 'modules/external/i18n';
-import { WebhookModule } from 'modules/webhook/webhook.module';
 import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [config],
-    }),
     TypeOrmModule.forRootAsync({
       imports: [
         ConfigModule.forRoot({
@@ -46,15 +41,6 @@ import { AppController } from './app.controller';
         return configService.get('database');
       },
     }),
-    BootbotModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService): BootbotOptions => ({
-        accessToken: configService.get('FB_PAGE_ACCESS_TOKEN'),
-        appSecret: configService.get('FB_APP_SECRET'),
-        graphApiVersion: configService.get('GRAPH_API_VERSION'),
-        verifyToken: configService.get('WEBHOOK_VERIFY_TOKEN'),
-      }),
-    }),
     I18nModule.registerAsync({
       useFactory: () => {
         const directory = isEnv('test') ? 'src/locales' : 'dist/locales';
@@ -66,7 +52,7 @@ import { AppController } from './app.controller';
         };
       },
     }),
-    WebhookModule,
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [
@@ -100,10 +86,6 @@ export class AppModule implements NestModule, OnApplicationShutdown {
     const routes: RouteInfo[] = [
       {
         path: '/',
-        method: RequestMethod.GET,
-      },
-      {
-        path: '/webhook',
         method: RequestMethod.GET,
       },
     ];

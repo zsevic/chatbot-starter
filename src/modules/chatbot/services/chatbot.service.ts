@@ -1,56 +1,41 @@
-import { Inject, Injectable } from '@nestjs/common';
-import {
-  GET_STARTED_PAYLOAD,
-  GREETING_TEXT,
-  PERSISTENT_MENU,
-} from 'modules/chatbot/chatbot.constants';
+import { Injectable } from '@nestjs/common';
+import { messenger, platform, router } from 'bottender/router';
+import { DEFAULT_MESSENGER_LOCALE } from 'common/config/constants';
+import { GET_STARTED_PAYLOAD } from 'modules/chatbot/chatbot.constants';
 import { ChatbotController } from 'modules/chatbot/chatbot.controller';
-import { BOOTBOT_OPTIONS_FACTORY } from 'modules/external/bootbot';
 import { UserService } from 'modules/user/user.service';
 import { ResponseService } from './response.service';
 
 @Injectable()
 export class ChatbotService {
   constructor(
-    @Inject(BOOTBOT_OPTIONS_FACTORY) private readonly chatbotService,
     private readonly controller: ChatbotController,
     private readonly responseService: ResponseService,
     private readonly userService: UserService,
   ) {}
 
-  private asyncWrap = (fn) => async (payload, chat) => {
-    const user = await this.userService.validateUser(payload.sender.id);
+  private asyncWrap = (fn) => async (context) => {
+    const user = await this.userService.validateUser(context._session.user.id);
 
-    if (!user && payload?.postback?.payload !== GET_STARTED_PAYLOAD) {
-      const { locale } = await chat.getUserProfile();
-      if (!locale) return;
+    if (!user && context.event.postback?.payload !== GET_STARTED_PAYLOAD) {
+      const {
+        locale = DEFAULT_MESSENGER_LOCALE,
+      } = await context.getUserProfile();
 
       const response = await this.responseService.getRegisterUserFailureResponse(
         locale,
       );
-      return chat.say(response);
+      return this.controller.say(context, response);
     }
 
-    await fn(payload, chat);
+    await fn(context);
   };
 
-  init = (): void => {
-    this.chatbotService.setGreetingText(GREETING_TEXT);
-    this.chatbotService.setPersistentMenu(PERSISTENT_MENU);
+  getRouter = () => router([platform('messenger', this.handleMessenger)]);
 
-    this.chatbotService.on(
-      'attachment',
-      this.asyncWrap(this.controller.attachmentHandler),
-    );
-
-    this.chatbotService.on(
-      'message',
-      this.asyncWrap(this.controller.messageHandler),
-    );
-
-    this.chatbotService.on(
-      'postback',
-      this.asyncWrap(this.controller.postbackHandler),
-    );
-  };
+  private handleMessenger = () =>
+    router([
+      messenger.message(this.asyncWrap(this.controller.messageHandler)),
+      messenger.postback(this.asyncWrap(this.controller.postbackHandler)),
+    ]);
 }

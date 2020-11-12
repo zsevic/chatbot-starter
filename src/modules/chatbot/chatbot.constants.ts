@@ -3,7 +3,7 @@ import { chatbot as chatbotI18nEn } from 'locales/en.json';
 import { chatbot as chatbotI18nSr } from 'locales/sr.json';
 
 export const ABOUT_ME_PAYLOAD = 'ABOUT_ME_PAYLOAD';
-export const GET_STARTED_PAYLOAD = 'BOOTBOT_GET_STARTED';
+export const GET_STARTED_PAYLOAD = 'GET_STARTED_PAYLOAD';
 
 export const POSTBACK_TYPE = 'POSTBACK_TYPE';
 
@@ -64,18 +64,22 @@ const SR_PERSISTENT_MENU = [
 export const PERSISTENT_MENU = [
   {
     locale: EN_GB_LOCALE,
-    call_to_actions: EN_PERSISTENT_MENU,
+    callToActions: EN_PERSISTENT_MENU,
+    composerInputDisabled: false,
   },
   {
     locale: EN_US_LOCALE,
-    call_to_actions: SR_PERSISTENT_MENU,
+    callToActions: SR_PERSISTENT_MENU,
+    composerInputDisabled: false,
   },
   {
     locale: SR_RS_LOCALE,
-    call_to_actions: SR_PERSISTENT_MENU,
+    callToActions: SR_PERSISTENT_MENU,
+    composerInputDisabled: false,
   },
   {
     locale: DEFAULT,
-    call_to_actions: EN_PERSISTENT_MENU,
+    callToActions: EN_PERSISTENT_MENU,
+    composerInputDisabled: false,
   },
 ];

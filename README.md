@@ -1,6 +1,6 @@
-# messenger-chatbot-starter
+# chatbot-starter
 
-> Messenger chatbot starter
+> Chatbot starter
 
 ## Getting started
 
@@ -14,8 +14,8 @@
 * Local setup
 
 ```bash
-git clone https://github.com/zsevic/messenger-chatbot-starter
-cd messenger-chatbot-starter
+git clone https://github.com/zsevic/chatbot-starter
+cd chatbot-starter
 cp .env.sample .env # change values after copying
 npm i
 pg_ctl -D /usr/local/var/postgres restart
@@ -25,10 +25,10 @@ npm run start:dev
 * Chatbot setup for local usage
 
 ```bash
-ngrok http 3000
 npm run start:dev
+npx ngrok http 3000
+npm run messenger-webhook:set <URL>/webhooks/messenger
 ```
-Change webhook callback URL with the given ngrok Forwarding https value and validate it inside Messenger/Settings section - https://developers.facebook.com/apps/<FB_APP_ID>/messenger/settings/
 
 ### Build
 
@@ -65,4 +65,4 @@ Generated at `/api-docs` endpoint
 
 ### Technologies used
 
-- Node.js, TypeScript, NestJS, TypeORM, BootBot
+- Node.js, TypeScript, NestJS, TypeORM, Bottender

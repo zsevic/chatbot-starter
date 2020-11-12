@@ -1,12 +1,10 @@
-import { Module, OnModuleInit } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import config from 'common/config';
+import { Module } from '@nestjs/common';
 import { StateModule } from 'modules/state/state.module';
 import { UserModule } from 'modules/user/user.module';
 import { ChatbotController } from './chatbot.controller';
 import {
-  AttachmentService,
   ChatbotService,
+  LocationService,
   MessageService,
   PostbackService,
   ResolverService,
@@ -15,28 +13,17 @@ import {
 } from './services';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      load: [config],
-    }),
-    StateModule,
-    UserModule,
-  ],
+  imports: [StateModule, UserModule],
   controllers: [ChatbotController],
   providers: [
-    AttachmentService,
     ChatbotController,
     ChatbotService,
+    LocationService,
     MessageService,
     PostbackService,
     ResolverService,
     ResponseService,
     ValidationService,
   ],
-  exports: [ChatbotService],
 })
-export class ChatbotModule implements OnModuleInit {
-  constructor(private readonly chatbotService: ChatbotService) {}
-
-  onModuleInit = () => this.chatbotService.init();
-}
+export class ChatbotModule {}
