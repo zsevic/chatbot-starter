@@ -16,7 +16,9 @@ export class ChatbotService {
   ) {}
 
   private asyncWrap = (fn) => async (context: MessengerContext) => {
-    const user = await this.userService.validateUser(context._session.user.id);
+    const user = await this.userService.validateUser({
+      [`${context.platform}_id`]: context._session.user.id,
+    });
 
     if (!user && context.event.postback?.payload !== GET_STARTED_PAYLOAD) {
       const {

@@ -14,9 +14,10 @@ export class MessageService {
 
   handleMessage = async (
     context: MessengerContext,
-    userId: number,
   ): Promise<MessengerTypes.TextMessage> => {
-    const locale = await this.userService.getLocale(userId);
+    const locale = await this.userService.getLocale({
+      [`${context.platform}_id`]: context._session.user.id,
+    });
 
     const validationResponse = await this.validationService.validateMessage(
       context,

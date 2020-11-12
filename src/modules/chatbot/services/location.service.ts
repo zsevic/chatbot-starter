@@ -12,9 +12,10 @@ export class LocationService {
 
   handleLocation = async (
     context: MessengerContext,
-    userId: number,
   ): Promise<MessengerTypes.TextMessage> => {
-    const locale = await this.userService.getLocale(userId);
+    const locale = await this.userService.getLocale({
+      [`${context.platform}_id`]: context._session.user.id,
+    });
 
     if (!context.state.current_state) {
       return this.resolverService.getDefaultResponse(locale);

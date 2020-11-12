@@ -25,9 +25,7 @@ export class ChatbotController {
   ) {}
 
   private aboutMeHandler = async (context: MessengerContext) => {
-    const response = await this.resolverService.getAboutMeResponse(
-      context._session.user.id,
-    );
+    const response = await this.resolverService.getAboutMeResponse(context);
 
     return this.say(context, response);
   };
@@ -51,7 +49,7 @@ export class ChatbotController {
       ],
     });
     const response = await this.resolverService.registerUser({
-      id: +id,
+      [`${context.platform}_id`]: id,
       first_name: firstName,
       gender,
       image_url,
@@ -63,25 +61,14 @@ export class ChatbotController {
   };
 
   locationHandler = async (context: MessengerContext) => {
-    const {
-      _session: {
-        user: { id: userId },
-      },
-    } = context;
-
-    const response = await this.locationService.handleLocation(context, userId);
+    const response = await this.locationService.handleLocation(context);
     if (!response) return;
 
     return this.say(context, response);
   };
 
   messageHandler = async (context: MessengerContext) => {
-    const {
-      event,
-      _session: {
-        user: { id: userId },
-      },
-    } = context;
+    const { event } = context;
     if (event.isLocation) {
       return this.locationHandler(context);
     }
@@ -89,7 +76,7 @@ export class ChatbotController {
     if (this.quickReplyHandlers[event.quickReply?.payload])
       return this.quickReplyHandlers[event.quickReply?.payload](context);
 
-    const response = await this.messageService.handleMessage(context, userId);
+    const response = await this.messageService.handleMessage(context);
     if (!response) return;
 
     return this.say(context, response);
@@ -100,15 +87,12 @@ export class ChatbotController {
       event: {
         postback: { payload: buttonPayload },
       },
-      _session: {
-        user: { id: userId },
-      },
     } = context;
 
     if (this.postbackHandlers[buttonPayload])
       return this.postbackHandlers[buttonPayload](context);
 
-    const response = await this.postbackService.handlePostback(context, userId);
+    const response = await this.postbackService.handlePostback(context);
     if (!response) return;
 
     return this.say(context, response);

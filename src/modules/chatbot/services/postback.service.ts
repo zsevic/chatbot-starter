@@ -14,9 +14,10 @@ export class PostbackService {
 
   handlePostback = async (
     context: MessengerContext,
-    userId: number,
   ): Promise<MessengerTypes.TextMessage> => {
-    const { locale } = await this.userService.getUser(userId);
+    const locale = await this.userService.getLocale({
+      [`${context.platform}_id`]: context._session.user.id,
+    });
 
     const { type } = parse(context.event.postback.payload);
     context.resetState();

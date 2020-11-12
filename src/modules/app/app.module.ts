@@ -9,17 +9,13 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { RouteInfo } from '@nestjs/common/interfaces';
-import { ConfigService, ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import rateLimit from 'express-rate-limit';
+import { Connection } from 'mongoose';
 import { Subject } from 'rxjs';
-import { Connection } from 'typeorm';
-import {
-  initializeTransactionalContext,
-  patchTypeORMRepositoryWithBaseRepository,
-} from 'typeorm-transactional-cls-hooked';
+import config from 'common/config';
 import { I18N_FALLBACKS } from 'common/config/constants';
-import databaseConfig from 'common/config/database';
 import { RATE_LIMIT_REQUESTS, RATE_LIMIT_TIME } from 'common/config/rate-limit';
 import { isEnv } from 'common/utils';
 import { ChatbotModule } from 'modules/chatbot/chatbot.module';
@@ -28,18 +24,16 @@ import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
+    MongooseModule.forRootAsync({
       imports: [
         ConfigModule.forRoot({
-          load: [databaseConfig],
+          load: [config],
         }),
       ],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
-        initializeTransactionalContext();
-        patchTypeORMRepositoryWithBaseRepository();
-        return configService.get('database');
-      },
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get('DATABASE_URL'),
+      }),
     }),
     I18nModule.registerAsync({
       useFactory: () => {
@@ -67,7 +61,7 @@ export class AppModule implements NestModule, OnApplicationShutdown {
   private readonly logger = new Logger(AppModule.name);
   private readonly shutdownListener$: Subject<void> = new Subject();
 
-  constructor(private readonly connection: Connection) {}
+  constructor(@InjectConnection() private readonly connection: Connection) {}
 
   closeDatabaseConnection = async (): Promise<void> => {
     try {

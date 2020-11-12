@@ -1,6 +1,4 @@
-export class User {
-  id: number;
-
+export class CreateUserDto {
   first_name: string;
 
   gender: string;
@@ -10,4 +8,6 @@ export class User {
   last_name: string;
 
   locale: string;
+
+  [platform_id: string]: string;
 }
