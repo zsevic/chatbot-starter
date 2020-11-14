@@ -20,6 +20,7 @@ import { RATE_LIMIT_REQUESTS, RATE_LIMIT_TIME } from 'common/config/rate-limit';
 import { isEnv } from 'common/utils';
 import { ChatbotModule } from 'modules/chatbot/chatbot.module';
 import { I18nModule } from 'modules/external/i18n';
+import { WebhooksModule } from 'modules/webhooks/webhooks.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -47,6 +48,7 @@ import { AppController } from './app.controller';
       },
     }),
     ChatbotModule,
+    WebhooksModule,
   ],
   controllers: [AppController],
   providers: [
