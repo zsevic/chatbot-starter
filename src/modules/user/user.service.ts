@@ -1,43 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { UserOptions } from 'modules/user/user.types';
-import { Model } from 'mongoose';
 import { CreateUserDto } from './create-user.dto';
-import { User, UserDocument } from './user.schema';
+import { UserRepository } from './user.repository';
+import { User } from './user.schema';
+import { UserOptions } from './user.types';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
-  getLocale = async (options: UserOptions): Promise<string> => {
-    const user = await this.userModel.findOne(options);
-    if (!user) throw new Error("User doesn't exist");
+  getLocale = async (options: UserOptions): Promise<string> =>
+    this.userRepository.getLocale(options);
 
-    return user.locale;
-  };
+  getUser = async (options: UserOptions): Promise<User> =>
+    this.userRepository.getUser(options);
 
-  getUser = async (options: UserOptions): Promise<User> => {
-    const user = await this.userModel.findOne(options);
-    if (!user) throw new Error("User doesn't exist");
+  registerUser = async (userDto: CreateUserDto): Promise<User> =>
+    this.userRepository.registerUser(userDto);
 
-    return user;
-  };
-
-  registerUser = async (userDto: CreateUserDto): Promise<User> => {
-    const user = await this.userModel.findOne({
-      messenger_id: userDto.messenger_id,
-    });
-    if (!user) {
-      const newUser = new this.userModel(userDto);
-      return newUser.save();
-    }
-    return user;
-  };
-
-  validateUser = async (options: UserOptions): Promise<User> => {
-    const user = await this.userModel.findOne(options);
-    if (!user) return;
-
-    return user;
-  };
+  validateUser = async (options: UserOptions): Promise<User> =>
+    this.userRepository.validateUser(options);
 }
