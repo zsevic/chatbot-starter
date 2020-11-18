@@ -26,7 +26,7 @@ npm run start:dev
 
 ```bash
 npx ngrok http 3000
-npm run messenger-webhook:set <URL>/webhooks/messenger
+echo "Y" | npm run messenger-webhook:set <URL>/webhooks/messenger
 ```
 
 ### Build

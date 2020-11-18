@@ -6,8 +6,6 @@ import { chatbot as chatbotI18nSr } from 'locales/sr.json';
 export const ABOUT_ME_PAYLOAD = 'ABOUT_ME_PAYLOAD';
 export const GET_STARTED_PAYLOAD = 'GET_STARTED_PAYLOAD';
 
-export const POSTBACK_TYPE = 'POSTBACK_TYPE';
-
 const ABOUT_ME_BUTTON = 'ABOUT_ME_BUTTON';
 const ABOUT_ME_MESSAGE = 'ABOUT_ME_MESSAGE';
 const DEFAULT_MESSAGE = 'DEFAULT_MESSAGE';
