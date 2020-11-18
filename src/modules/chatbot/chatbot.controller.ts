@@ -1,20 +1,12 @@
 import { Controller, Logger } from '@nestjs/common';
-import { MessengerContext } from 'bottender';
+import { MessengerContext, MessengerTypes } from 'bottender';
 import {
   DEFAULT_MESSENGER_GENDER,
   DEFAULT_MESSENGER_LOCALE,
 } from 'common/config/constants';
 import { getUserOptions } from 'common/utils';
-import {
-  ABOUT_ME_PAYLOAD,
-  GET_STARTED_PAYLOAD,
-} from 'modules/chatbot/chatbot.constants';
-import {
-  isButtonTemplate,
-  isGenericTemplate,
-  isQuickReplyTemplate,
-} from './chatbot.type-guards';
-import { Message } from './chatbot.types';
+import { ABOUT_ME_PAYLOAD, GET_STARTED_PAYLOAD } from './chatbot.constants';
+import { PayloadHandlers } from './chatbot.types';
 import { LocationService } from './services/location.service';
 import { MessageService } from './services/message.service';
 import { PostbackService } from './services/postback.service';
@@ -31,11 +23,8 @@ export class ChatbotController {
     private readonly resolverService: ResolverService,
   ) {}
 
-  private aboutMeHandler = async (context: MessengerContext) => {
-    const response = await this.resolverService.getAboutMeResponse(context);
-
-    return this.say(context, response);
-  };
+  private aboutMeHandler = async (context: MessengerContext) =>
+    this.resolverService.getAboutMeResponse(context);
 
   private getStartedButtonHandler = async (context: MessengerContext) => {
     const {
@@ -55,7 +44,7 @@ export class ChatbotController {
       ],
     });
     const userOptions = getUserOptions(context);
-    const response = await this.resolverService.registerUser(
+    return this.resolverService.registerUser(
       {
         ...userOptions,
         first_name: firstName,
@@ -66,16 +55,12 @@ export class ChatbotController {
       },
       userOptions,
     );
-
-    return this.say(context, response);
   };
 
-  locationHandler = async (context: MessengerContext) => {
-    const response = await this.locationService.handleLocation(context);
-    if (!response) return;
-
-    return this.say(context, response);
-  };
+  locationHandler = async (
+    context: MessengerContext,
+  ): Promise<MessengerTypes.TextMessage> =>
+    this.locationService.handleLocation(context);
 
   messageHandler = async (context: MessengerContext) => {
     const { event } = context;
@@ -86,10 +71,7 @@ export class ChatbotController {
     if (this.quickReplyHandlers[event.quickReply?.payload])
       return this.quickReplyHandlers[event.quickReply?.payload](context);
 
-    const response = await this.messageService.handleMessage(context);
-    if (!response) return;
-
-    return this.say(context, response);
+    return this.messageService.handleMessage(context);
   };
 
   postbackHandler = async (context: MessengerContext) => {
@@ -102,45 +84,15 @@ export class ChatbotController {
     if (this.postbackHandlers[buttonPayload])
       return this.postbackHandlers[buttonPayload](context);
 
-    const response = await this.postbackService.handlePostback(context);
-    if (!response) return;
-
-    return this.say(context, response);
+    return this.postbackService.handlePostback(context);
   };
 
-  say = (context: MessengerContext, message: Message | Message[]) => {
-    const {
-      _session: {
-        user: { id: recipientId },
-      },
-    } = context;
-    if (typeof message === 'string') {
-      return context.client.sendText(recipientId, message);
-    } else if (isQuickReplyTemplate(message)) {
-      return context.client.sendText(recipientId, message.text, {
-        quickReplies: message.quickReplies,
-      });
-    } else if (isButtonTemplate(message)) {
-      return context.client.sendTemplate(recipientId, {
-        templateType: 'button',
-        ...message,
-      });
-    } else if (isGenericTemplate(message)) {
-      return context.client.sendGenericTemplate(recipientId, message.cards);
-    } else if (Array.isArray(message)) {
-      return message.reduce((promise, msg) => {
-        return promise.then(() => this.say(context, msg));
-      }, Promise.resolve(undefined));
-    }
-    this.logger.error('Invalid format for .say() message.');
-  };
-
-  postbackHandlers = {
+  postbackHandlers: PayloadHandlers = {
     [ABOUT_ME_PAYLOAD]: this.aboutMeHandler,
     [GET_STARTED_PAYLOAD]: this.getStartedButtonHandler,
   };
 
-  quickReplyHandlers = {
+  quickReplyHandlers: PayloadHandlers = {
     [ABOUT_ME_PAYLOAD]: this.aboutMeHandler,
   };
 }

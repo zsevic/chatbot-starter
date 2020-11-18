@@ -1,4 +1,4 @@
-import { MessengerTypes } from 'bottender';
+import { MessengerContext, MessengerTypes } from 'bottender';
 
 export type ButtonTemplate = {
   text: string;
@@ -14,3 +14,9 @@ export type Message =
   | MessengerTypes.TextMessage
   | ButtonTemplate
   | GenericTemplate;
+
+export type PayloadHandlers = {
+  [payload: string]: (
+    context: MessengerContext,
+  ) => Promise<Message | Message[]>;
+};
