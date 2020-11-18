@@ -1,12 +1,12 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessengerContext, MessengerTypes } from 'bottender';
 import {
   DEFAULT_MESSENGER_GENDER,
   DEFAULT_MESSENGER_LOCALE,
 } from 'common/config/constants';
-import { getUserOptions } from 'common/utils';
 import { ABOUT_ME_PAYLOAD, GET_STARTED_PAYLOAD } from './chatbot.constants';
 import { PayloadHandlers } from './chatbot.types';
+import { getUserOptions } from './chatbot.utils';
 import { LocationService } from './services/location.service';
 import { MessageService } from './services/message.service';
 import { PostbackService } from './services/postback.service';
@@ -14,8 +14,6 @@ import { ResolverService } from './services/resolver.service';
 
 @Controller()
 export class ChatbotController {
-  private readonly logger = new Logger(ChatbotController.name);
-
   constructor(
     private readonly locationService: LocationService,
     private readonly messageService: MessageService,

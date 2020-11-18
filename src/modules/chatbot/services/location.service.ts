@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MessengerContext, MessengerTypes } from 'bottender';
-import { getUserOptions } from 'common/utils';
+import { getUserOptions } from 'modules/chatbot/chatbot.utils';
 import { UserService } from 'modules/user/user.service';
 import { ResolverService } from './resolver.service';
 

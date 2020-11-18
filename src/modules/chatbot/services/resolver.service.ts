@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MessengerContext, MessengerTypes } from 'bottender';
-import { getUserOptions } from 'common/utils';
 import { ButtonTemplate } from 'modules/chatbot/chatbot.types';
+import { getUserOptions } from 'modules/chatbot/chatbot.utils';
 import { CreateUserDto } from 'modules/user/create-user.dto';
 import { UserService } from 'modules/user/user.service';
 import { UserOptions } from 'modules/user/user.types';

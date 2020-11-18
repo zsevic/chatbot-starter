@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MessengerContext } from 'bottender';
 import { messenger, platform, router } from 'bottender/router';
 import { DEFAULT_MESSENGER_LOCALE } from 'common/config/constants';
-import { getUserOptions } from 'common/utils';
 import { GET_STARTED_PAYLOAD } from 'modules/chatbot/chatbot.constants';
 import { ChatbotController } from 'modules/chatbot/chatbot.controller';
 import {
@@ -11,6 +10,7 @@ import {
   isQuickReplyTemplate,
 } from 'modules/chatbot/chatbot.type-guards';
 import { Message } from 'modules/chatbot/chatbot.types';
+import { getUserOptions } from 'modules/chatbot/chatbot.utils';
 import { UserService } from 'modules/user/user.service';
 import { ResponseService } from './response.service';
 
