@@ -4,6 +4,7 @@ import {
   DEFAULT_MESSENGER_GENDER,
   DEFAULT_MESSENGER_LOCALE,
 } from 'common/config/constants';
+import { getUserOptions } from 'common/utils';
 import {
   ABOUT_ME_PAYLOAD,
   GET_STARTED_PAYLOAD,
@@ -38,7 +39,6 @@ export class ChatbotController {
 
   private getStartedButtonHandler = async (context: MessengerContext) => {
     const {
-      id,
       firstName,
       gender = DEFAULT_MESSENGER_GENDER,
       lastName,
@@ -54,14 +54,18 @@ export class ChatbotController {
         'profile_pic',
       ],
     });
-    const response = await this.resolverService.registerUser({
-      [`${context.platform}_id`]: id,
-      first_name: firstName,
-      gender,
-      image_url,
-      last_name: lastName,
-      locale,
-    });
+    const userOptions = getUserOptions(context);
+    const response = await this.resolverService.registerUser(
+      {
+        ...userOptions,
+        first_name: firstName,
+        gender,
+        image_url,
+        last_name: lastName,
+        locale,
+      },
+      userOptions,
+    );
 
     return this.say(context, response);
   };

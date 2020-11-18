@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MessengerContext } from 'bottender';
 import { messenger, platform, router } from 'bottender/router';
 import { DEFAULT_MESSENGER_LOCALE } from 'common/config/constants';
+import { getUserOptions } from 'common/utils';
 import { GET_STARTED_PAYLOAD } from 'modules/chatbot/chatbot.constants';
 import { ChatbotController } from 'modules/chatbot/chatbot.controller';
 import { UserService } from 'modules/user/user.service';
@@ -16,9 +17,8 @@ export class ChatbotService {
   ) {}
 
   private asyncWrap = (fn) => async (context: MessengerContext) => {
-    const user = await this.userService.validateUser({
-      [`${context.platform}_id`]: context._session.user.id,
-    });
+    const userOptions = getUserOptions(context);
+    const user = await this.userService.validateUser(userOptions);
 
     if (!user && context.event.postback?.payload !== GET_STARTED_PAYLOAD) {
       const {

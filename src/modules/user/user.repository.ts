@@ -23,10 +23,11 @@ export class UserRepository {
     return user;
   };
 
-  registerUser = async (userDto: CreateUserDto): Promise<User> => {
-    const user = await this.userModel.findOne({
-      messenger_id: userDto.messenger_id,
-    });
+  registerUser = async (
+    userDto: CreateUserDto,
+    userOptions: UserOptions,
+  ): Promise<User> => {
+    const user = await this.userModel.findOne(userOptions);
     if (!user) {
       const newUser = new this.userModel(userDto);
       return newUser.save();

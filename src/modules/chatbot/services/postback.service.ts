@@ -1,6 +1,7 @@
 import { parse } from 'querystring';
 import { Injectable } from '@nestjs/common';
 import { MessengerContext, MessengerTypes } from 'bottender';
+import { getUserOptions } from 'common/utils';
 import { POSTBACK_TYPE } from 'modules/chatbot/chatbot.constants';
 import { UserService } from 'modules/user/user.service';
 import { ResolverService } from './resolver.service';
@@ -15,9 +16,8 @@ export class PostbackService {
   handlePostback = async (
     context: MessengerContext,
   ): Promise<MessengerTypes.TextMessage> => {
-    const locale = await this.userService.getLocale({
-      [`${context.platform}_id`]: context._session.user.id,
-    });
+    const userOptions = getUserOptions(context);
+    const locale = await this.userService.getLocale(userOptions);
 
     const { type } = parse(context.event.postback.payload);
     context.resetState();

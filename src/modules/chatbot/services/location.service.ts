@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MessengerContext, MessengerTypes } from 'bottender';
+import { getUserOptions } from 'common/utils';
 import { UserService } from 'modules/user/user.service';
 import { ResolverService } from './resolver.service';
 
@@ -13,9 +14,8 @@ export class LocationService {
   handleLocation = async (
     context: MessengerContext,
   ): Promise<MessengerTypes.TextMessage> => {
-    const locale = await this.userService.getLocale({
-      [`${context.platform}_id`]: context._session.user.id,
-    });
+    const userOptions = getUserOptions(context);
+    const locale = await this.userService.getLocale(userOptions);
 
     if (!context.state.current_state) {
       return this.resolverService.getDefaultResponse(locale);

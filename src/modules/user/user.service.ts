@@ -14,8 +14,10 @@ export class UserService {
   getUser = async (options: UserOptions): Promise<User> =>
     this.userRepository.getUser(options);
 
-  registerUser = async (userDto: CreateUserDto): Promise<User> =>
-    this.userRepository.registerUser(userDto);
+  registerUser = async (
+    userDto: CreateUserDto,
+    userOptions: UserOptions,
+  ): Promise<User> => this.userRepository.registerUser(userDto, userOptions);
 
   validateUser = async (options: UserOptions): Promise<User> =>
     this.userRepository.validateUser(options);
