@@ -1,0 +1,11 @@
+version: '3'
+services:
+   mongo:
+     image: 'mongo:3.6'
+     ports:
+       - "27017:27017"
+     container_name: 'mongodb'
+     volumes:
+       - my-data:/var/lib/mongodb/data
+volumes:
+  my-data:
