@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import throng from 'throng';
 import { setupApiDocs } from 'common/config/api-docs';
-import { AllExceptionsFilter } from 'common/filters';
+import { HttpExceptionFilter } from 'common/filters';
 import { loggerMiddleware } from 'common/middlewares';
 import { CustomValidationPipe } from 'common/pipes';
 import { isEnv } from 'common/utils';
@@ -29,7 +29,7 @@ async function bootstrap(): Promise<void> {
   app.use(cookieParser(configService.get('COOKIE_SECRET')));
   app.use(helmet());
   app.use(loggerMiddleware);
-  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new CustomValidationPipe({
       forbidNonWhitelisted: true,
@@ -59,9 +59,10 @@ throng({
   worker,
 });
 
-process.on('unhandledRejection', function handleUnhandledRejection(
-  err: Error,
-): void {
-  const logger = new Logger(handleUnhandledRejection.name);
-  logger.error(err.stack);
-});
+process.on(
+  'unhandledRejection',
+  function handleUnhandledRejection(err: Error): void {
+    const logger = new Logger(handleUnhandledRejection.name);
+    logger.error(err.stack);
+  },
+);

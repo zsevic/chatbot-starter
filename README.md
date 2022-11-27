@@ -6,8 +6,7 @@
 
 ### Prerequisites
 
-- Node.js installed (version 14)
-- Local MongoDB database
+- Node.js installed (version 18)
 
 ### Setup
 
@@ -18,7 +17,6 @@ git clone https://github.com/zsevic/chatbot-starter
 cd chatbot-starter
 cp .env.sample .env # change values after copying
 npm i
-mongod --dbpath=mongodb/data
 npm run start:dev
 ```
 
@@ -26,7 +24,7 @@ npm run start:dev
 
 ```bash
 npx ngrok http 3000
-echo "Y" | npm run messenger-webhook:set <URL>/webhooks/messenger
+echo "Y" | npm run telegram-webhook:set <URL>/webhooks/telegram
 ```
 
 ### Build

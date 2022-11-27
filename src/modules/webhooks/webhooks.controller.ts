@@ -4,7 +4,7 @@ import { handle } from 'main';
 
 @Controller('webhooks')
 export class WebhooksController {
-  @Get('messenger')
+  @Get('telegram')
   async validateWebhook(
     @Req() req: Request,
     @Res() res: Response,
@@ -12,7 +12,7 @@ export class WebhooksController {
     return handle(req, res);
   }
 
-  @Post('messenger')
+  @Post('telegram')
   async handleWebhook(
     @Req() req: Request,
     @Res() res: Response,

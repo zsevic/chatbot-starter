@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
-  private readonly logger = new Logger(AllExceptionsFilter.name);
+export class HttpExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(HttpExceptionFilter.name);
 
   catch(exception: any, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
@@ -22,7 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception?.code === 'EBADCSRFTOKEN')
       return response.sendStatus(HttpStatus.FORBIDDEN);
 
-    if (status >= 500) {
+    if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
       this.logger.error(exception.stack);
     } else {
       this.logger.error(exception.message);

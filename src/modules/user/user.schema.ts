@@ -6,25 +6,10 @@ export type UserDocument = User & Document;
 @Schema()
 export class User {
   @Prop()
-  id: string;
+  public id: string;
 
   @Prop()
-  messenger_id: string;
-
-  @Prop()
-  first_name: string;
-
-  @Prop()
-  gender: string;
-
-  @Prop()
-  image_url: string;
-
-  @Prop()
-  last_name: string;
-
-  @Prop()
-  locale: string;
+  public chatId: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
