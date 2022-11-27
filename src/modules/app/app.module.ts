@@ -43,7 +43,6 @@ import { AppController } from './app.controller';
     },
   ],
 })
-@Injectable()
 export class AppModule implements NestModule, OnApplicationShutdown {
   private readonly logger = new Logger(AppModule.name);
   private readonly shutdownListener$: Subject<void> = new Subject();

@@ -52,10 +52,10 @@ async function bootstrap(): Promise<void> {
   });
 }
 
-async function worker(): Promise<void> {
+(async () => {
   await bottenderApp.prepare();
   await bootstrap();
-}
+})();
 
 process.on(
   'unhandledRejection',
