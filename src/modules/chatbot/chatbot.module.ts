@@ -4,10 +4,6 @@ import { ChatbotService, MessageService, ResponseService } from './services';
 
 @Module({
   imports: [UserModule],
-  providers: [
-    ChatbotService,
-    MessageService,
-    ResponseService,
-  ],
+  providers: [ChatbotService, MessageService, ResponseService],
 })
 export class ChatbotModule {}

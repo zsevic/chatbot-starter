@@ -15,6 +15,7 @@ export class ChatbotService {
   };
 
   getRouter = () => {
+    // eslint-disable-next-line
     // @ts-ignore
     return router([telegram.message(this.handleMessage)]);
   };
