@@ -1,10 +1,10 @@
 import path from 'path';
 import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { bottender } from 'bottender';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import throng from 'throng';
 import { setupApiDocs } from 'common/config/api-docs';
 import { HttpExceptionFilter } from 'common/filters';
 import { loggerMiddleware } from 'common/middlewares';
@@ -19,7 +19,7 @@ export const handle = bottenderApp.getRequestHandler();
 async function bootstrap(): Promise<void> {
   const app = await application.get();
   const logger = new Logger(bootstrap.name);
-  const configService = app.get('configService');
+  const configService = app.get(ConfigService);
 
   app.enable('trust proxy');
   app.enableShutdownHooks();
@@ -46,7 +46,7 @@ async function bootstrap(): Promise<void> {
 
   await app.listen(port).then((): void => {
     logger.log(`Server is running on port ${port}`);
-    if (!isEnv('production')) {
+    if (!isEnv('production') && !isEnv('test')) {
       connectToTunnelAndSetWebhookUrl(port);
     }
   });
@@ -56,12 +56,6 @@ async function worker(): Promise<void> {
   await bottenderApp.prepare();
   await bootstrap();
 }
-
-throng({
-  count: process.env.WEB_CONCURRENCY || 1,
-  lifetime: Infinity,
-  worker,
-});
 
 process.on(
   'unhandledRejection',

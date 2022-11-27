@@ -9,6 +9,7 @@ export class WebhooksController {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
+    // @ts-ignore
     return handle(req, res);
   }
 
@@ -17,6 +18,7 @@ export class WebhooksController {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
+    // @ts-ignore
     return handle(req, res);
   }
 }

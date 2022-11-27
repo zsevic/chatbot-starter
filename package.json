@@ -50,7 +50,6 @@
     "rxjs": "^6.6.3",
     "shelljs": "^0.8.5",
     "swagger-ui-express": "^4.1.4",
-    "throng": "^5.0.0",
     "ts-node": "^9.0.0",
     "typescript": "^3.9.10",
     "winston": "^3.3.3"
