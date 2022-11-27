@@ -17,6 +17,7 @@ git clone https://github.com/zsevic/chatbot-starter
 cd chatbot-starter
 cp .env.sample .env # change values after copying
 npm i
+docker-compose up
 npm run start:dev
 ```
 
