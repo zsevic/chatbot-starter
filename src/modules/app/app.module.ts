@@ -1,5 +1,4 @@
 import {
-  Injectable,
   Logger,
   MiddlewareConsumer,
   Module,
