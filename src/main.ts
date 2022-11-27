@@ -9,7 +9,7 @@ import { setupApiDocs } from 'common/config/api-docs';
 import { HttpExceptionFilter } from 'common/filters';
 import { loggerMiddleware } from 'common/middlewares';
 import { CustomValidationPipe } from 'common/pipes';
-import { isEnv } from 'common/utils';
+import { connectToTunnelAndSetWebhookUrl, isEnv } from 'common/utils';
 import { AppModule } from 'modules/app/app.module';
 import { application } from './index';
 
@@ -42,9 +42,13 @@ async function bootstrap(): Promise<void> {
   app.setViewEngine('ejs');
 
   setupApiDocs(app);
+  const port = configService.get('PORT');
 
-  await app.listen(configService.get('PORT')).then((): void => {
-    logger.log(`Server is running on port ${configService.get('PORT')}`);
+  await app.listen(port).then((): void => {
+    logger.log(`Server is running on port ${port}`);
+    if (!isEnv('production')) {
+      connectToTunnelAndSetWebhookUrl(port);
+    }
   });
 }
 

@@ -20,13 +20,6 @@ npm i
 npm run start:dev
 ```
 
-* Chatbot setup for local usage
-
-```bash
-npx ngrok http 3000
-echo "Y" | npm run telegram-webhook:set <URL>/webhooks/telegram
-```
-
 ### Build
 
 ```bash
