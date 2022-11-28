@@ -1,6 +1,6 @@
 # chatbot-starter
 
-> Chatbot starter
+> Telegram chatbot starter
 
 ## Getting started
 
@@ -9,8 +9,6 @@
 - Node.js installed (version 18)
 
 ### Setup
-
-* Local setup
 
 ```bash
 git clone https://github.com/zsevic/chatbot-starter
