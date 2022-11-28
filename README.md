@@ -7,6 +7,7 @@
 ### Prerequisites
 
 - Node.js installed (version 18)
+- Configured Telegram bot on the Telegram app
 
 ### Setup
 
